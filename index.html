@@ -143,7 +143,7 @@
             storyTitle.textContent = currentStory.title;
             storyImage.src = page.image;
             storyImage.alt = page.text;
-            // storyText.textContent = page.text;
+            storyText.textContent = page.text;
             pageIndicator.textContent = `Page ${currentPage + 1} of ${currentStory.pages.length}`;
 
             prevBtn.disabled = currentPage === 0;
