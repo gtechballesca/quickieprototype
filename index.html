@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessible Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+        .reader-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .story-text {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: #1a202c;
+            min-height: 200px;
+        }
+        .story-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="reader-container">
+        <h1 id="story-title" class="text-3xl font-bold text-center mb-1 text-purple-600"></h1>
+        <h2 class="text-xl text-center mb-4 text-gray-500">A Story About Hard Work</h2>
+        <div class="story-content">
+            <img id="story-image" src="" alt="Story illustration" class="story-image">
+            <p id="story-text" class="story-text"></p>
+            <p id="subtitle-text" class="text-lg text-gray-700 mt-2 italic"></p>
+        </div>
+        <div class="controls flex justify-between items-center mt-6">
+            <button id="prev-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+            <button id="tts-btn" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">Read Aloud</button>
+            <button id="next-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Next</button>
+        </div>
+        <div class="text-center mt-4">
+            <span id="page-indicator" class="text-sm text-gray-500"></span>
+        </div>
+        <div id="tts-message" class="mt-4 text-center text-sm text-green-600"></div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const storyTitle = document.getElementById('story-title');
+        const storyImage = document.getElementById('story-image');
+        const storyText = document.getElementById('story-text');
+        const subtitleText = document.getElementById('subtitle-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const ttsBtn = document.getElementById('tts-btn');
+        const pageIndicator = document.getElementById('page-indicator');
+        const ttsMessage = document.getElementById('tts-message');
+
+        const stories = [{
+            title: "Ang Munting Pulang Inahin",
+            pages: [{
+                text: "Noong unang panahon, may isang munting pulang inahin na nakatira sa bukid kasama ang isang aso, pusa, at baboy.",
+                englishText: "Once upon a time, there was a little red hen who lived on a farm with a dog, a cat, and a pig.",
+                image: "https://placehold.co/800x400/b3c7f2/ffffff?text=Ang+Munting+Pulang+Inahin"
+            }, {
+                text: "Isang araw, nakakita siya ng butil ng trigo. 'Sino ang tutulong sa akin na itanim ang trigo na ito?' tanong niya.",
+                englishText: "One day, she found a grain of wheat. 'Who will help me plant this wheat?' she asked.",
+                image: "https://placehold.co/800x400/96b8e3/ffffff?text=Pagtatanim+ng+trigo"
+            }, {
+                text: "Ang aso, pusa, at baboy ay nagsabing, 'Hindi ako!' Kaya, ang munting pulang inahin ay mag-isang nagtanim ng trigo.",
+                englishText: "The dog, cat, and pig all said, 'Not I!' So the little red hen planted the wheat by herself.",
+                image: "https://placehold.co/800x400/7a9cc5/ffffff?text=Nagtratrabaho+ang+inahin"
+            }, {
+                text: "Nang lumaki na ang trigo, tanong niya, 'Sino ang tutulong sa akin na anihin ang trigo na ito?'",
+                englishText: "When the wheat grew tall, she asked, 'Who will help me harvest this wheat?'",
+                image: "https://placehold.co/800x400/5e81a7/ffffff?text=Pag-aani+ng+trigo"
+            }, {
+                text: "Ang aso, pusa, at baboy ay nagsabing, 'Hindi ako!' Kaya, ang munting pulang inahin ay mag-isang inani ang trigo.",
+                englishText: "The dog, cat, and pig all said, 'Not I!' So the little red hen harvested the wheat by herself.",
+                image: "https://placehold.co/800x400/416689/ffffff?text=Lalong+nagtratrabaho+ang+inahin"
+            }, {
+                text: "Nang ang trigo ay naging harina, tanong niya, 'Sino ang tutulong sa akin na maghurno ng tinapay?'",
+                englishText: "When the wheat became flour, she asked, 'Who will help me bake this bread?'",
+                image: "https://placehold.co/800x400/2b4a68/ffffff?text=Paghurno+ng+tinapay"
+            }, {
+                text: "Ang aso, pusa, at baboy ay nagsabing, 'Hindi ako!' Kaya, ang munting pulang inahin ay mag-isang naghurno ng tinapay.",
+                englishText: "The dog, cat, and pig all said, 'Not I!' So the little red hen baked the bread by herself.",
+                image: "https://placehold.co/800x400/172e48/ffffff?text=Naghu-hurno+ang+inahin"
+            }, {
+                text: "Nang handa na ang tinapay, tanong niya, 'Sino ang tutulong sa akin na kainin ang tinapay na ito?'",
+                englishText: "When the bread was ready, she asked, 'Who will help me eat this bread?'",
+                image: "https://placehold.co/800x400/0c1f30/ffffff?text=Huling+tinapay"
+            }, {
+                text: "Lahat ay sumigaw, 'Ako!' Ngunit sabi ng munting pulang inahin, 'Hindi! Ako lang ang kakain nito!' At kinain niya nga.",
+                englishText: "Everyone shouted, 'I will!' But the little red hen said, 'No! I'll eat it all by myself!' And she did.",
+                image: "https://placehold.co/800x400/000000/ffffff?text=Kinain+ng+inahin"
+            }]
+        }];
+
+        let currentPage = 0;
+        const currentStory = stories[0];
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // This line is key: it tells the browser to use a Filipino language setting
+                // for the speech, which helps the English voice pronounce the words correctly.
+                utterance.lang = 'en-US';
+                
+                // This will search for an English voice and use it if available
+                const englishVoice = speechSynthesis.getVoices().find(voice => voice.lang.startsWith('en-'));
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                }
+
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                ttsMessage.textContent = 'Reading aloud...';
+                utterance.onend = () => {
+                    ttsMessage.textContent = '';
+                };
+                utterance.onerror = () => {
+                    ttsMessage.textContent = 'An error occurred while reading.';
+                };
+
+                // The browser will only speak if a user interaction initiated the call.
+                // Clicking the button satisfies this requirement.
+                window.speechSynthesis.speak(utterance);
+                
+            } else {
+                ttsMessage.textContent = 'Text-to-speech not supported in this browser.';
+            }
+        }
+
+        function renderPage() {
+            const page = currentStory.pages[currentPage];
+            storyTitle.textContent = currentStory.title;
+            storyImage.src = page.image;
+            storyImage.alt = page.text;
+            storyText.textContent = page.text;
+            subtitleText.textContent = page.englishText;
+            pageIndicator.textContent = `Page ${currentPage + 1} of ${currentStory.pages.length}`;
+
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === currentStory.pages.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                renderPage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < currentStory.pages.length - 1) {
+                currentPage++;
+                renderPage();
+            }
+        });
+
+        ttsBtn.addEventListener('click', () => {
+            speakText(currentStory.pages[currentPage].text);
+        });
+
+        renderPage();
+    });
+</script>
+</body>
+</html>
