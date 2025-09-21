@@ -42,7 +42,6 @@
         <div class="story-content">
             <img id="story-image" src="" alt="Story illustration" class="story-image">
             <p id="story-text" class="story-text"></p>
-            <p id="subtitle-text" class="text-lg text-gray-700 mt-2 italic"></p>
         </div>
         <div class="controls flex justify-between items-center mt-6">
             <button id="prev-btn" class="bg-purple-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
@@ -60,7 +59,6 @@
         const storyTitle = document.getElementById('story-title');
         const storyImage = document.getElementById('story-image');
         const storyText = document.getElementById('story-text');
-        const subtitleText = document.getElementById('subtitle-text');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const ttsBtn = document.getElementById('tts-btn');
@@ -99,85 +97,4 @@
                 image: "https://placehold.co/800x400/172e48/ffffff?text=Naghu-hurno+ang+inahin"
             }, {
                 text: "Nang handa na ang tinapay, tanong niya, 'Sino ang tutulong sa akin na kainin ang tinapay na ito?'",
-                englishText: "When the bread was ready, she asked, 'Who will help me eat this bread?'",
-                image: "https://placehold.co/800x400/0c1f30/ffffff?text=Huling+tinapay"
-            }, {
-                text: "Lahat ay sumigaw, 'Ako!' Ngunit sabi ng munting pulang inahin, 'Hindi! Ako lang ang kakain nito!' At kinain niya nga.",
-                englishText: "Everyone shouted, 'I will!' But the little red hen said, 'No! I'll eat it all by myself!' And she did.",
-                image: "https://placehold.co/800x400/000000/ffffff?text=Kinain+ng+inahin"
-            }]
-        }];
-
-        let currentPage = 0;
-        const currentStory = stories[0];
-
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                
-                // This line is key: it tells the browser to use a Filipino language setting
-                // for the speech, which helps the English voice pronounce the words correctly.
-                utterance.lang = 'en-US';
-                
-                // This will search for an English voice and use it if available
-                const englishVoice = speechSynthesis.getVoices().find(voice => voice.lang.startsWith('en-'));
-                if (englishVoice) {
-                    utterance.voice = englishVoice;
-                }
-
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
-
-                ttsMessage.textContent = 'Reading aloud...';
-                utterance.onend = () => {
-                    ttsMessage.textContent = '';
-                };
-                utterance.onerror = () => {
-                    ttsMessage.textContent = 'An error occurred while reading.';
-                };
-
-                // The browser will only speak if a user interaction initiated the call.
-                // Clicking the button satisfies this requirement.
-                window.speechSynthesis.speak(utterance);
-                
-            } else {
-                ttsMessage.textContent = 'Text-to-speech not supported in this browser.';
-            }
-        }
-
-        function renderPage() {
-            const page = currentStory.pages[currentPage];
-            storyTitle.textContent = currentStory.title;
-            storyImage.src = page.image;
-            storyImage.alt = page.text;
-            storyText.textContent = page.text;
-            subtitleText.textContent = page.englishText;
-            pageIndicator.textContent = `Page ${currentPage + 1} of ${currentStory.pages.length}`;
-
-            prevBtn.disabled = currentPage === 0;
-            nextBtn.disabled = currentPage === currentStory.pages.length - 1;
-        }
-
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                renderPage();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < currentStory.pages.length - 1) {
-                currentPage++;
-                renderPage();
-            }
-        });
-
-        ttsBtn.addEventListener('click', () => {
-            speakText(currentStory.pages[currentPage].text);
-        });
-
-        renderPage();
-    });
-</script>
-</body>
-</html>
+                englishText: "
